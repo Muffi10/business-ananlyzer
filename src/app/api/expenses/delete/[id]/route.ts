@@ -1,28 +1,28 @@
 import { NextResponse } from "next/server";
-import { getFirestore, doc, deleteDoc } from "firebase/firestore";
-import { app } from "@/lib/firebase";
-
-const db = getFirestore(app);
+import { db } from "@/lib/firebase";
+import { doc, deleteDoc } from "firebase/firestore";
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    // ✅ Await params in Next.js 15+
+    const { id } = await params;
 
     if (!id) {
-      return NextResponse.json({ error: "Missing expense ID" }, { status: 400 });
+      return NextResponse.json({ error: "Missing ID" }, { status: 400 });
     }
 
-    await deleteDoc(doc(db, "expenses", id));
+    const expenseRef = doc(db, "expenses", id);
+    await deleteDoc(expenseRef);
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
+    return NextResponse.json({
+      success: true,
+      message: "Expense deleted successfully",
+    });
+  } catch (error: any) {
     console.error("Error deleting expense:", error);
-    return NextResponse.json(
-      { error: "Failed to delete expense" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

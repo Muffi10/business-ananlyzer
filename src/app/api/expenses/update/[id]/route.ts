@@ -4,13 +4,15 @@ import { doc, updateDoc } from "firebase/firestore";
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // ✅ Await params in Next.js 15+
+    const { id } = await params;
     const body = await req.json();
     const { category, description, amount } = body;
 
-    const expenseRef = doc(db, "expenses", params.id);
+    const expenseRef = doc(db, "expenses", id);
     await updateDoc(expenseRef, {
       ...(category && { category }),
       ...(description && { description }),

@@ -4,10 +4,13 @@ import { doc, getDoc } from "firebase/firestore";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const saleRef = doc(db, "sales", params.id);
+    // ✅ Await params in Next.js 15+
+    const { id } = await params;
+    
+    const saleRef = doc(db, "sales", id);
     const saleSnap = await getDoc(saleRef);
 
     if (!saleSnap.exists()) {

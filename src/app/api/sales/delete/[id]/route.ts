@@ -4,10 +4,13 @@ import { doc, deleteDoc } from "firebase/firestore";
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const saleRef = doc(db, "sales", params.id);
+    // ✅ Await params in Next.js 15+
+    const { id } = await params;
+    
+    const saleRef = doc(db, "sales", id);
     await deleteDoc(saleRef);
 
     return NextResponse.json({ success: true, message: "Sale deleted successfully" });
