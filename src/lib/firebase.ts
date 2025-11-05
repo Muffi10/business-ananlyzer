@@ -1,5 +1,5 @@
 // src/lib/firebase.ts
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -13,8 +13,8 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// ✅ Initialize Firebase only once - prevents duplicate app error
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // ✅ Export initialized services
 export const auth = getAuth(app);

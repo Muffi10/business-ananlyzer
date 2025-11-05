@@ -280,12 +280,12 @@ export default function ReportsPage() {
                     <div>
                       <h4 className="text-sm font-medium text-gray-700 mb-2">Top Selling Products</h4>
                       {Object.entries(salesByCategory)
-                        .sort(([,a], [,b]) => b - a)
+                        .sort(([,a], [,b]) =>  (b as number) - (a as number))
                         .slice(0, 3)
                         .map(([product, amount]) => (
                           <div key={product} className="flex justify-between items-center p-2">
                             <span className="text-sm text-gray-600 truncate">{product}</span>
-                            <span className="text-sm font-semibold text-green-600">₹{amount.toLocaleString()}</span>
+                            <span className="text-sm font-semibold text-green-600">₹{(amount as number).toLocaleString()}</span>
                           </div>
                         ))
                       }
@@ -302,7 +302,7 @@ export default function ReportsPage() {
                         .map(([category, amount]) => (
                           <div key={category} className="flex justify-between items-center p-2">
                             <span className="text-sm text-gray-600">{category}</span>
-                            <span className="text-sm font-semibold text-red-600">₹{amount.toLocaleString()}</span>
+                            <span className="text-sm font-semibold text-red-600">₹{(amount as number).toLocaleString()}</span>
                           </div>
                         ))
                       }
